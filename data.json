@@ -1,6 +1,10 @@
 [
   {"id": 1, "name": "Asha", "role": "Data Engineer", "city": "Chennai"},
-  {"id": 2, "name": "Ravi", "role": "Backend Developer", "city": "Bengaluru"},
-  {"id": 3, "name": "Meera", "role": "Cloud Architect", "city": "Hyderabad"},
+  {"id": 2, "name": "Rahul", "role": "Backend Developer", "city": "Bengaluru"},
+  {"id": 3, "name": "Priya", "role": "Cloud Architect", "city": "Hyderabad"},
+  {"id": 2, "name": "Rahul", "role": "Frontend Developer", "city": "Delhi"},
+  {"id": 3, "name": "Priya", "role": "Cloud Developer", "city": "Kerela"},
+  {"id": 2, "name": "Bhuvanesh", "role": "Backend Support Engineer", "city": "Mumbai"},
+  {"id": 3, "name": "Harish", "role": "Cloud Consultant", "city": "Kolkata"},
   {"id": 4, "name": "Karthik", "role": "DevOps Engineer", "city": "Pune"}
 ]
