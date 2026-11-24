@@ -80,6 +80,44 @@ def submit():
 def success():
     return render_template("success.html")
 
+# ---------- Task 3: To-Do item backend ----------
+@app.route("/submittodoitem", methods=["POST"])
+def submit_todo_item():
+    """Accepts itemName and itemDescription (JSON body or form data) and
+    stores them in the MongoDB 'todo_items' collection."""
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        payload = request.form
+
+    item_name = str(payload.get("itemName", "")).strip()
+    item_description = str(payload.get("itemDescription", "")).strip()
+
+    if not item_name or not item_description:
+        return jsonify({"error": "itemName and itemDescription are required"}), 400
+
+    try:
+        result = get_collection(os.getenv("MONGO_TODO_COLLECTION", "todo_items")).insert_one(
+            {
+                "itemName": item_name,
+                "itemDescription": item_description,
+                "created_at": datetime.now(timezone.utc),
+            }
+        )
+    except PyMongoError as exc:
+        return jsonify({"error": f"Database error: {exc}"}), 500
+    except RuntimeError as exc:
+        return jsonify({"error": str(exc)}), 500
+
+    return jsonify({"message": "To-do item saved", "id": str(result.inserted_id)}), 201
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # The auto-reloader can restart the server in the middle of a request
+    # (browser shows ERR_CONNECTION_RESET), so it is off by default.
+    # Set FLASK_DEBUG=1 in .env if you want debug mode.
+    app.run(
+        host="127.0.0.1",
+        port=int(os.getenv("PORT", "5000")),
+        debug=os.getenv("FLASK_DEBUG") == "1",
+        use_reloader=False,
+    )
