@@ -1,0 +1,6 @@
+[
+  {"id": 1, "name": "Asha", "role": "Data Engineer", "city": "Chennai"},
+  {"id": 2, "name": "Ravi", "role": "Backend Developer", "city": "Bengaluru"},
+  {"id": 3, "name": "Meera", "role": "Cloud Architect", "city": "Hyderabad"},
+  {"id": 4, "name": "Karthik", "role": "DevOps Engineer", "city": "Pune"}
+]
