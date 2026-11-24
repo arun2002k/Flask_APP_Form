@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>To-Do</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f4f6f8; margin: 0; display: grid; place-items: center; min-height: 100vh; }
+    .card { background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); width: min(420px, 92vw); }
+    h1 { margin-top: 0; font-size: 1.4rem; }
+    label { display: block; margin: 1rem 0 .3rem; font-weight: 600; font-size: .9rem; }
+    input, textarea { width: 100%; padding: .6rem; border: 1px solid #c8ced6; border-radius: 8px; font: inherit; box-sizing: border-box; }
+    button { margin-top: 1.2rem; width: 100%; padding: .7rem; border: 0; border-radius: 8px; background: #2563eb; color: #fff; font-size: 1rem; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    #status { margin-top: 1rem; padding: .7rem; border-radius: 8px; font-size: .9rem; display: none; word-break: break-word; }
+    #status.ok { display: block; background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+    #status.err { display: block; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>To-Do</h1>
+
+    <form id="todo-form" method="POST" action="/submittodoitem">
+      <label for="itemName">Item Name</label>
+      <input id="itemName" name="itemName" type="text" required>
+
+      <label for="itemDescription">Item Description</label>
+      <textarea id="itemDescription" name="itemDescription" rows="3" required></textarea>
+
+      <label for="itemId">Item ID</label>
+      <input id="itemId" name="itemId" type="text">
+
+      <button type="submit">Add item</button>
+    </form>
+
+    <div id="status" role="status"></div>
+  </div>
+
+  <script>
+    // Sends every field in the form to /submittodoitem as JSON and shows the result
+    // on this page. Falls back to a normal form POST if JavaScript is disabled.
+    const form = document.getElementById("todo-form");
+    const statusBox = document.getElementById("status");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      statusBox.className = "";
+      try {
+        const res = await fetch(form.action, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.error || "Request failed (" + res.status + ")");
+        statusBox.textContent = body.message || "Item saved";
+        statusBox.className = "ok";
+        form.reset();
+      } catch (err) {
+        statusBox.textContent = err.message;
+        statusBox.className = "err";
+      }
+    });
+  </script>
+</body>
+</html>
